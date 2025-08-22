@@ -9,6 +9,21 @@ import mime from "mime"
 import fetch from "node-fetch"
 import config from "./config.js"
 import { setupMasqr } from "./Masqr.js"
+import crypto from "node:crypto"
+import pkg from "pg"
+const { Pool } = pkg
+
+const pool = new Pool({
+  connectionString:
+    process.env.DATABASE_URL ||
+    "postgresql://postgres:mTjSMxKVFSkkUcMneXgFxjVnkoSKoFTF@postgres.railway.internal:5432/railway",
+})
+
+pool
+  .query(
+    "CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL)"
+  )
+  .catch((err) => console.error("Failed to ensure users table", err))
 
 const __dirname = process.cwd()
 const server = http.createServer()
@@ -84,6 +99,42 @@ if (process.env.MASQR === "true") {
 
 app.use(express.static(path.join(__dirname, "static")))
 app.use("/ov", cors({ origin: true }))
+
+app.post("/api/signup", async (req, res) => {
+  const { username, password } = req.body
+  if (!username || !password) {
+    return res.status(400).json({ error: "Missing fields" })
+  }
+  const hash = crypto.createHash("sha256").update(password).digest("hex")
+  try {
+    await pool.query("INSERT INTO users (username, password) VALUES ($1,$2)", [username, hash])
+    res.json({ success: true })
+  } catch (err) {
+    if (err.code === "23505") {
+      res.status(409).json({ error: "User already exists" })
+    } else {
+      res.status(500).json({ error: "Server error" })
+    }
+  }
+})
+
+app.post("/api/login", async (req, res) => {
+  const { username, password } = req.body
+  if (!username || !password) {
+    return res.status(400).json({ error: "Missing fields" })
+  }
+  const hash = crypto.createHash("sha256").update(password).digest("hex")
+  try {
+    const { rows } = await pool.query("SELECT password FROM users WHERE username=$1", [username])
+    if (rows.length && rows[0].password === hash) {
+      res.json({ success: true })
+    } else {
+      res.status(401).json({ error: "Invalid credentials" })
+    }
+  } catch (err) {
+    res.status(500).json({ error: "Server error" })
+  }
+})
 
 const routes = [
   { path: "/as", file: "apps.html" },
