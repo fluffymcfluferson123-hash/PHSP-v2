@@ -90,3 +90,24 @@ body.loaded {
   position: absolute;
   z-index: 99;
 }
+
+.lock-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  color: var(--text-primary);
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 90;
+  text-align: center;
+}
+
+.lock-screen i {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
