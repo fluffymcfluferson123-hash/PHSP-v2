@@ -10,20 +10,24 @@ import fetch from "node-fetch"
 import config from "./config.js"
 import { setupMasqr } from "./Masqr.js"
 import crypto from "node:crypto"
-import pkg from "pg"
-const { Pool } = pkg
 
-const pool = new Pool({
-  connectionString:
-    process.env.DATABASE_URL ||
-    "postgresql://postgres:mTjSMxKVFSkkUcMneXgFxjVnkoSKoFTF@postgres.railway.internal:5432/railway",
-})
-
-pool
-  .query(
-    "CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL)"
-  )
-  .catch((err) => console.error("Failed to ensure users table", err))
+let pool = null
+if (process.env.DATABASE_URL) {
+  try {
+    const pkg = await import("pg")
+    const { Pool } = pkg
+    pool = new Pool({ connectionString: process.env.DATABASE_URL })
+    pool
+      .query(
+        "CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL)"
+      )
+      .catch((err) => console.error("Failed to ensure users table", err))
+  } catch (err) {
+    console.error("Failed to load pg module", err)
+  }
+} else {
+  console.warn("DATABASE_URL not set; authentication routes disabled")
+}
 
 const __dirname = process.cwd()
 const server = http.createServer()
@@ -106,6 +110,9 @@ app.post("/api/signup", async (req, res) => {
     return res.status(400).json({ error: "Missing fields" })
   }
   const hash = crypto.createHash("sha256").update(password).digest("hex")
+  if (!pool) {
+    return res.status(503).json({ error: "Database not configured" })
+  }
   try {
     await pool.query("INSERT INTO users (username, password) VALUES ($1,$2)", [username, hash])
     res.json({ success: true })
@@ -124,6 +131,9 @@ app.post("/api/login", async (req, res) => {
     return res.status(400).json({ error: "Missing fields" })
   }
   const hash = crypto.createHash("sha256").update(password).digest("hex")
+  if (!pool) {
+    return res.status(503).json({ error: "Database not configured" })
+  }
   try {
     const { rows } = await pool.query("SELECT password FROM users WHERE username=$1", [username])
     if (rows.length && rows[0].password === hash) {
@@ -145,8 +155,7 @@ const routes = [
   { path: "/li", file: "login.html" },
   { path: "/", file: "index.html" },
   { path: "/tos", file: "tos.html" },
-];
-
+]
 
 routes.forEach((route) => {
   app.get(route.path, (req, res) => {
