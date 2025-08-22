@@ -87,14 +87,15 @@ app.use("/ov", cors({ origin: true }))
 
 const routes = [
   { path: "/as", file: "apps.html" },
+  { path: "/ts", file: "tools.html" },
   { path: "/gm", file: "games.html" },
   { path: "/st", file: "settings.html" },
   { path: "/ta", file: "tabs.html" },
-  { path: "/ts", file: "tools.html" },
   { path: "/ah", file: "about.html" },
   { path: "/", file: "index.html" },
   { path: "/tos", file: "tos.html" },
-]
+];
+
 
 routes.forEach((route) => {
   app.get(route.path, (req, res) => {

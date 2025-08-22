@@ -197,13 +197,14 @@ p {
   transform: translate3d(0, 0, 0);
 }
 
-/* Optional: accessibility-friendly fallback */
+/* Accessibility-friendly fallback */
 @media (prefers-reduced-motion: reduce) {
   .iframe-container iframe {
     transition: none;
     transform: none;
   }
 }
+
 
 
 #add-tab {

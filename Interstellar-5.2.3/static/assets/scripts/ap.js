@@ -1,7 +1,7 @@
 let appInd
 let g = window.location.pathname === "/gm"
-let a = window.location.pathname === "/as"
-let c = window.location.pathname === "/ts"
+let at = window.location.pathname === "/as" || window.location.pathname === "/ts"
+let mode = "apps"
 let t = window.top.location.pathname === "/ta"
 
 function saveToLocal(path) {
@@ -67,9 +67,9 @@ function CustomApp(customApp) {
   let apps
   if (g) {
     apps = localStorage.getItem("Gcustom")
-  } else if (c) {
+  } else if (mode === "tools") {
     apps = localStorage.getItem("Tcustom")
-  } else if (a) {
+  } else {
     apps = localStorage.getItem("Acustom")
   }
 
@@ -85,9 +85,9 @@ function CustomApp(customApp) {
 
   if (g) {
     localStorage.setItem("Gcustom", JSON.stringify(apps))
-  } else if (c) {
+  } else if (mode === "tools") {
     localStorage.setItem("Tcustom", JSON.stringify(apps))
-  } else if (a) {
+  } else {
     localStorage.setItem("Acustom", JSON.stringify(apps))
   }
 }
@@ -96,9 +96,9 @@ function setPin(index) {
   let pins
   if (g) {
     pins = localStorage.getItem("Gpinned")
-  } else if (c) {
+  } else if (mode === "tools") {
     pins = localStorage.getItem("Tpinned")
-  } else if (a) {
+  } else {
     pins = localStorage.getItem("Apinned")
   }
 
@@ -115,12 +115,12 @@ function setPin(index) {
   }
   if (g) {
     localStorage.setItem("Gpinned", pins)
-  } else if (c) {
+  } else if (mode === "tools") {
     localStorage.setItem("Tpinned", pins)
-  } else if (a) {
+  } else {
     localStorage.setItem("Apinned", pins)
   }
-  location.reload()
+  loadList()
 }
 
 function pinContains(i, p) {
@@ -180,8 +180,8 @@ function initializeCustomApp(customApp) {
   }
 
   const image = document.createElement("img")
-  image.width = 145
-  image.height = 145
+  image.width = 120
+  image.height = 120
   image.src = customApp.image
   image.loading = "lazy"
 
@@ -197,159 +197,208 @@ function initializeCustomApp(customApp) {
   nonPinnedApps.insertBefore(columnDiv, nonPinnedApps.firstChild)
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  let storedApps
+function loadList() {
+  let path = "/assets/json/a.min.json"
   if (g) {
-    storedApps = JSON.parse(localStorage.getItem("Gcustom"))
-  } else if (c) {
-    storedApps = JSON.parse(localStorage.getItem("Tcustom"))
-  } else if (a) {
-    storedApps = JSON.parse(localStorage.getItem("Acustom"))
+    path = "/assets/json/g.min.json"
+  } else if (mode === "tools") {
+    path = "/assets/json/t.min.json"
   }
-  if (storedApps) {
-    Object.values(storedApps).forEach((app) => {
-      initializeCustomApp(app)
-    })
-  }
-})
-
-let path = "/assets/json/a.min.json"
-if (g) {
-  path = "/assets/json/g.min.json"
-} else if (c) {
-  path = "/assets/json/t.min.json"
-} else if (a) {
-  path = "/assets/json/a.min.json"
-}
-fetch(path)
-  .then((response) => {
-    return response.json()
-  })
-  .then((appsList) => {
-    appsList.sort((a, b) => {
-      if (a.name.startsWith("[Custom]")) {
-        return -1
-      }
-      if (b.name.startsWith("[Custom]")) {
-        return 1
-      }
-      return a.name.localeCompare(b.name)
-    })
-    const nonPinnedApps = document.querySelector(".container-apps")
-    const pinnedApps = document.querySelector(".pinned-apps")
-    if (g) {
-      var pinList = localStorage.getItem("Gpinned") || ""
-    } else if (a) {
-      var pinList = localStorage.getItem("Apinned") || ""
-    } else if (c) {
-      var pinList = localStorage.getItem("Tpinned") || ""
-    }
-    pinList = pinList ? pinList.split(",").map(Number) : []
-    appInd = 0
-
-    appsList.forEach((app) => {
-      if (app.categories && app.categories.includes("local")) {
-        app.local = true
-      } else if (app.link && (app.link.includes("now.gg") || app.link.includes("nowgg.me"))) {
-        if (app.partial === null || app.partial === undefined) {
-          app.partial = true
-          app.say = "Now.gg is currently not working for some users."
+  fetch(path)
+    .then((response) => response.json())
+    .then((appsList) => {
+      appsList.sort((a, b) => {
+        if (a.name.startsWith("[Custom]")) {
+          return -1
         }
-      } else if (app.link && app.link.includes("nowgg.nl")) {
-        if (app.error === null || app.error === undefined) {
-          app.error = true
-          app.say = "NowGG.nl is currently down."
+        if (b.name.startsWith("[Custom]")) {
+          return 1
         }
-      }
-
-      let pinNum = appInd
-
-      const columnDiv = document.createElement("div")
-      columnDiv.classList.add("column")
-      columnDiv.setAttribute("data-category", app.categories.join(" "))
-
-      const pinIcon = document.createElement("i")
-      pinIcon.classList.add("fa", "fa-map-pin")
-      pinIcon.ariaHidden = true
-
-      const btn = document.createElement("button")
-      btn.appendChild(pinIcon)
-      btn.style.float = "right"
-      btn.style.backgroundColor = "rgb(45,45,45)"
-      btn.style.borderRadius = "50%"
-      btn.style.borderColor = "transparent"
-      btn.style.color = "white"
-      btn.style.top = "-200px"
-      btn.style.position = "relative"
-      btn.onclick = function () {
-        setPin(pinNum)
-      }
-      btn.title = "Pin"
-
-      const link = document.createElement("a")
-
-      link.onclick = function () {
-        handleClick(app)
-      }
-
-      const image = document.createElement("img")
-      image.width = 145
-      image.height = 145
-      image.loading = "lazy"
-
-      if (app.image) {
-        image.src = app.image
+        return a.name.localeCompare(b.name)
+      })
+      const nonPinnedApps = document.querySelector(".container-apps")
+      const pinnedApps = document.querySelector(".pinned-apps")
+      nonPinnedApps.innerHTML = ""
+      pinnedApps.innerHTML = ""
+      let pinList
+      if (g) {
+        pinList = localStorage.getItem("Gpinned") || ""
+      } else if (mode === "tools") {
+        pinList = localStorage.getItem("Tpinned") || ""
       } else {
-        image.style.display = "none"
+        pinList = localStorage.getItem("Apinned") || ""
+      }
+      pinList = pinList ? pinList.split(",").map(Number) : []
+      appInd = 0
+
+      let storedApps
+      if (g) {
+        storedApps = JSON.parse(localStorage.getItem("Gcustom"))
+      } else if (mode === "tools") {
+        storedApps = JSON.parse(localStorage.getItem("Tcustom"))
+      } else {
+        storedApps = JSON.parse(localStorage.getItem("Acustom"))
+      }
+      if (storedApps) {
+        Object.values(storedApps).forEach((app) => {
+          initializeCustomApp(app)
+        })
       }
 
-      const paragraph = document.createElement("p")
-      paragraph.textContent = app.name
-
-      if (app.error) {
-        paragraph.style.color = "red"
-        if (!app.say) {
-          app.say = "This app is currently not working."
+      appsList.forEach((app) => {
+        if (app.categories && app.categories.includes("local")) {
+          app.local = true
+        } else if (app.link && (app.link.includes("now.gg") || app.link.includes("nowgg.me"))) {
+          if (app.partial === null || app.partial === undefined) {
+            app.partial = true
+            app.say = "Now.gg is currently not working for some users."
+          }
+        } else if (app.link && app.link.includes("nowgg.nl")) {
+          if (app.error === null || app.error === undefined) {
+            app.error = true
+            app.say = "NowGG.nl is currently down."
+          }
         }
-      } else if (app.load) {
-        paragraph.style.color = "yellow"
-        if (!app.say) {
-          app.say = "This app may experience excessive loading times."
+
+        let pinNum = appInd
+
+        const columnDiv = document.createElement("div")
+        columnDiv.classList.add("column")
+        columnDiv.setAttribute("data-category", app.categories.join(" "))
+
+        const pinIcon = document.createElement("i")
+        pinIcon.classList.add("fa", "fa-map-pin")
+        pinIcon.ariaHidden = true
+
+        const btn = document.createElement("button")
+        btn.appendChild(pinIcon)
+        btn.style.float = "right"
+        btn.style.backgroundColor = "rgb(45,45,45)"
+        btn.style.borderRadius = "50%"
+        btn.style.borderColor = "transparent"
+        btn.style.color = "white"
+        btn.style.top = "-200px"
+        btn.style.position = "relative"
+        btn.onclick = function () {
+          setPin(pinNum)
         }
-      } else if (app.partial) {
-        paragraph.style.color = "yellow"
-        if (!app.say) {
-          app.say = "This app is currently experiencing some issues, it may not work for you. (Dynamic doesn't work in about:blank)"
+        btn.title = "Pin"
+
+        const link = document.createElement("a")
+        link.onclick = function () {
+          handleClick(app)
         }
-      }
 
-      link.appendChild(image)
-      link.appendChild(paragraph)
-      columnDiv.appendChild(link)
+        const image = document.createElement("img")
+        image.width = 120
+        image.height = 120
+        image.loading = "lazy"
+        if (app.image) {
+          image.src = app.image
+        } else {
+          image.style.display = "none"
+        }
 
-      if (appInd != 0) {
-        columnDiv.appendChild(btn)
-      }
+        const paragraph = document.createElement("p")
+        paragraph.textContent = app.name
 
-      if (pinList != null && appInd != 0) {
-        if (pinContains(appInd, pinList)) {
-          pinnedApps.appendChild(columnDiv)
+        if (app.error) {
+          paragraph.style.color = "red"
+          if (!app.say) {
+            app.say = "This app is currently not working."
+          }
+        } else if (app.load) {
+          paragraph.style.color = "yellow"
+          if (!app.say) {
+            app.say = "This app may experience excessive loading times."
+          }
+        } else if (app.partial) {
+          paragraph.style.color = "yellow"
+          if (!app.say) {
+            app.say = "This app is currently experiencing some issues, it may not work for you. (Dynamic doesn't work in about:blank)"
+          }
+        }
+
+        link.appendChild(image)
+        link.appendChild(paragraph)
+        columnDiv.appendChild(link)
+
+        if (appInd != 0) {
+          columnDiv.appendChild(btn)
+        }
+
+        if (pinList != null && appInd != 0) {
+          if (pinContains(appInd, pinList)) {
+            pinnedApps.appendChild(columnDiv)
+          } else {
+            nonPinnedApps.appendChild(columnDiv)
+          }
         } else {
           nonPinnedApps.appendChild(columnDiv)
         }
-      } else {
-        nonPinnedApps.appendChild(columnDiv)
-      }
-      appInd += 1
-    })
+        appInd += 1
+      })
 
-    const appsContainer = document.getElementById("apps-container")
-    appsContainer.appendChild(pinnedApps)
-    appsContainer.appendChild(nonPinnedApps)
-  })
-  .catch((error) => {
-    console.error("Error fetching JSON data:", error)
-  })
+      const appsContainer = document.getElementById("apps-container")
+      appsContainer.appendChild(pinnedApps)
+      appsContainer.appendChild(nonPinnedApps)
+    })
+    .catch((error) => {
+      console.error("Error fetching JSON data:", error)
+    })
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (at) {
+    document.getElementById("showApps").addEventListener("click", () => {
+      mode = "apps"
+      updateCategories()
+      loadList()
+    })
+    document.getElementById("showTools").addEventListener("click", () => {
+      mode = "tools"
+      updateCategories()
+      loadList()
+    })
+    updateCategories()
+  }
+  loadList()
+})
+
+function updateCategories() {
+  if (!at) return
+  const category = document.getElementById("category")
+  if (mode === "tools") {
+    category.innerHTML = `
+        <option value="all">All</option>
+        <option value="ai">AI</option>
+        <option value="ad">AI Detectors</option>
+        <option value="pc">Plagiarism Checker</option>
+        <option value="ts">YouTube Transcript</option>
+        <option value="cs">Cheats</option>
+        <option value="ep">Edpuzzle</option>
+        <option value="bl">Blooket</option>
+        <option value="kh">Kahoot</option>`
+    document.getElementById("showTools").classList.add("active")
+    document.getElementById("showApps").classList.remove("active")
+  } else {
+    category.innerHTML = `
+        <option value="all">All</option>
+        <option value="android">Android Emulator</option>
+        <option value="social">Social</option>
+        <option value="stream">Streaming</option>
+        <option value="message">Messaging</option>
+        <option value="media">TV & Movies</option>
+        <option value="game">Game Sites</option>
+        <option value="cloud">Cloud Gaming</option>
+        <option value="tool">Tools</option>
+        <option value="AI">AI</option>
+        <option value="emu">Emulator</option>
+        <option value="mail">Mail</option>`
+    document.getElementById("showApps").classList.add("active")
+    document.getElementById("showTools").classList.remove("active")
+  }
+}
 
 function show_category() {
   var selectedCategories = Array.from(document.querySelectorAll("#category option:checked")).map((option) => option.value)
