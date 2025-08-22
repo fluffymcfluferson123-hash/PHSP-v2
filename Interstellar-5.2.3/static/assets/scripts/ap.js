@@ -80,7 +80,6 @@ function CustomApp(customApp) {
   }
 
   const key = "custom" + (Object.keys(apps).length + 1)
-
   apps[key] = customApp
 
   if (g) {
@@ -147,7 +146,6 @@ function Custom(app) {
       categories: ["all"],
       status: "ok",
     }
-
     CustomApp(customApp)
     loadList()
   }
@@ -167,6 +165,7 @@ function loadList() {
       const pinnedApps = document.querySelector(".pinned-apps")
       nonPinnedApps.innerHTML = ""
       pinnedApps.innerHTML = ""
+
       let pinList
       if (g) {
         pinList = localStorage.getItem("Gpinned") || ""
@@ -189,13 +188,10 @@ function loadList() {
       if (storedApps) {
         appsList = Object.values(storedApps).concat(appsList)
       }
+
       appsList.sort((a, b) => {
-        if (a.name.startsWith("[Custom]")) {
-          return -1
-        }
-        if (b.name.startsWith("[Custom]")) {
-          return 1
-        }
+        if (a.name.startsWith("[Custom]")) return -1
+        if (b.name.startsWith("[Custom]")) return 1
         return a.name.localeCompare(b.name)
       })
 
@@ -203,25 +199,19 @@ function loadList() {
       const removedApps = JSON.parse(localStorage.getItem("removedApps") || "[]")
 
       appsList.forEach((app) => {
-        if (removedApps.includes(app.name)) {
-          return
-        }
+        if (removedApps.includes(app.name)) return
+
         if (app.categories && app.categories.includes("local")) {
           app.local = true
         } else if (app.link && (app.link.includes("now.gg") || app.link.includes("nowgg.me"))) {
-          if (app.partial === null || app.partial === undefined) {
-            app.partial = true
-            app.say = "Now.gg is currently not working for some users."
-          }
+          app.partial = true
+          app.say = app.say || "Now.gg is currently not working for some users."
         } else if (app.link && app.link.includes("nowgg.nl")) {
-          if (app.error === null || app.error === undefined) {
-            app.error = true
-            app.say = "NowGG.nl is currently down."
-          }
+          app.error = true
+          app.say = app.say || "NowGG.nl is currently down."
         }
 
         let pinNum = appInd
-
         const columnDiv = document.createElement("div")
         columnDiv.classList.add("column")
         const cat = app.categories ? app.categories.join(" ") : "all"
@@ -265,55 +255,40 @@ function loadList() {
 
         if (app.error) {
           paragraph.style.color = "red"
-          if (!app.say) {
-            app.say = "This app is currently not working."
-          }
+          if (!app.say) app.say = "This app is currently not working."
         } else if (app.load) {
           paragraph.style.color = "yellow"
-          if (!app.say) {
-            app.say = "This app may experience excessive loading times."
-          }
+          if (!app.say) app.say = "This app may experience excessive loading times."
         } else if (app.partial) {
           paragraph.style.color = "yellow"
-          if (!app.say) {
-            app.say = "This app is currently experiencing some issues, it may not work for you. (Dynamic doesn't work in about:blank)"
-          }
+          if (!app.say) app.say = "This app is currently experiencing some issues."
         }
 
         let status = "ok"
-        if (app.error) {
-          status = "error"
-        } else if (app.load || app.partial) {
-          status = "warn"
-        }
-        if (app.status) {
-          status = app.status
-        }
-        if (statusOverrides[app.name]) {
-          status = statusOverrides[app.name]
-        }
+        if (app.error) status = "error"
+        else if (app.load || app.partial) status = "warn"
+        if (app.status) status = app.status
+        if (statusOverrides[app.name]) status = statusOverrides[app.name]
 
         const badge = document.createElement("span")
         badge.classList.add("status-badge", status)
-        if (status === "error") {
-          badge.innerHTML = "<i class='fa-solid fa-xmark'></i>"
-        } else if (status === "warn") {
-          badge.innerHTML = "<i class='fa-solid fa-minus'></i>"
-        } else {
-          badge.innerHTML = "<i class='fa-solid fa-check'></i>"
-        }
+        badge.innerHTML =
+          status === "error"
+            ? "<i class='fa-solid fa-xmark'></i>"
+            : status === "warn"
+            ? "<i class='fa-solid fa-minus'></i>"
+            : "<i class='fa-solid fa-check'></i>"
 
         link.appendChild(image)
         link.appendChild(paragraph)
         link.appendChild(badge)
         columnDiv.appendChild(link)
 
-
         if (appInd != 0) {
           columnDiv.appendChild(btn)
         }
 
-        if (pinList != null && appInd != 0) {
+        if (pinList && appInd != 0) {
           if (pinContains(appInd, pinList)) {
             pinnedApps.appendChild(columnDiv)
           } else {
@@ -329,9 +304,7 @@ function loadList() {
       appsContainer.appendChild(pinnedApps)
       appsContainer.appendChild(nonPinnedApps)
     })
-    .catch((error) => {
-      console.error("Error fetching JSON data:", error)
-    })
+    .catch((error) => console.error("Error fetching JSON data:", error))
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -386,7 +359,7 @@ function show_category() {
   var selectedCategories = Array.from(document.querySelectorAll("#category option:checked")).map((option) => option.value)
   var games = document.getElementsByClassName("column")
 
-  for (var i = 0; i < games.length; i += 1) {
+  for (var i = 0; i < games.length; i++) {
     var game = games[i]
     var categories = game.getAttribute("data-category").split(" ")
 
@@ -403,14 +376,9 @@ function search_bar() {
   var filter = input.value.toLowerCase()
   var games = document.getElementsByClassName("column")
 
-  for (var i = 0; i < games.length; i += 1) {
+  for (var i = 0; i < games.length; i++) {
     var game = games[i]
     var name = game.getElementsByTagName("p")[0].textContent.toLowerCase()
-
-    if (name.includes(filter)) {
-      game.style.display = "block"
-    } else {
-      game.style.display = "none"
-    }
+    game.style.display = name.includes(filter) ? "block" : "none"
   }
 }

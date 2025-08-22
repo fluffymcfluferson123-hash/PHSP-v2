@@ -58,24 +58,24 @@ async function checkLicense(pass) {
   }
 })
 */
+
 // Dynamic & Ads
 document.addEventListener("DOMContentLoaded", function () {
   if (localStorage.getItem("dy") === null || localStorage.getItem("dy") === undefined) {
     localStorage.setItem("dy", "false")
   }
 })
+
 // Nav
 var nav = document.querySelector(".fixed-nav-bar")
 
 if (nav) {
   var themeId = localStorage.getItem("theme")
   var LogoUrl = "/assets/media/favicon/main.png"
-  var LogoUrl
   if (themeId === "Inverted") {
     LogoUrl = "/assets/media/favicon/main-inverted.png"
-  } else {
-    LogoUrl = LogoUrl
   }
+
   var html = `
     <div class="fixed-nav-bar-container">
       <a class="icon" href="/./"><img alt="nav" id="INImg" src="${LogoUrl}"/></a>
@@ -88,6 +88,7 @@ if (nav) {
       <a class="navbar-link" href="/./st"><i class="fa-solid fa-gear navbar-icon settings-icon"></i><an>Set</an><an>tings</an></a>
       <a class="navbar-link" href="/./li"><i class="fa-solid fa-user navbar-icon"></i><an>Sign</an><an>up/Login</an></a>
     </div>`
+
   nav.innerHTML = html
 
   const registered = localStorage.getItem("registered") === "true"
@@ -141,8 +142,9 @@ if (themeid) {
     document.head.appendChild(customThemeEle)
   }
 }
+
 // Tab Cloaker
-document.addEventListener("DOMContentLoaded", function (event) {
+document.addEventListener("DOMContentLoaded", function () {
   const icon = document.getElementById("tab-favicon")
   const name = document.getElementById("tab-title")
   const selectedValue = localStorage.getItem("selectedOption")
@@ -151,12 +153,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     const customName = localStorage.getItem("CustomName")
     const customIcon = localStorage.getItem("CustomIcon")
 
-    if (customName) {
-      nameValue = customName
-    }
-    if (customIcon) {
-      iconUrl = customIcon
-    }
+    if (customName) nameValue = customName
+    if (customIcon) iconUrl = customIcon
 
     if (iconUrl) {
       icon.setAttribute("href", iconUrl)
@@ -240,6 +238,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     setCloak(options[selectedValue].name, options[selectedValue].icon)
   }
 })
+
 // Key
 document.addEventListener("DOMContentLoaded", function () {
   const eventKey = JSON.parse(localStorage.getItem("eventKey")) || ["Ctrl", "E"]
@@ -257,6 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   })
 })
+
 // Background Image
 document.addEventListener("DOMContentLoaded", function () {
   var savedBackgroundImage = localStorage.getItem("backgroundImage")
