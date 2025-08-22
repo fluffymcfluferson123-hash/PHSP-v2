@@ -27,6 +27,20 @@ if (process.env.DATABASE_URL) {
   }
 } else {
   console.warn("DATABASE_URL not set; authentication routes disabled")
+=======
+// Fallback to an in-memory user store when DATABASE_URL isn't provided.
+let pool
+const memoryUsers = new Map()
+
+if (process.env.DATABASE_URL) {
+  const pkg = await import("pg")
+  const { Pool } = pkg
+  pool = new Pool({ connectionString: process.env.DATABASE_URL })
+  pool
+    .query("CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL)")
+    .catch((err) => console.error("Failed to ensure users table", err))
+} else {
+  console.warn("DATABASE_URL not set; using in-memory user store")
 }
 
 const __dirname = process.cwd()
@@ -112,6 +126,11 @@ app.post("/api/signup", async (req, res) => {
   const hash = crypto.createHash("sha256").update(password).digest("hex")
   if (!pool) {
     return res.status(503).json({ error: "Database not configured" })
+    if (memoryUsers.has(username)) {
+      return res.status(409).json({ error: "User already exists" })
+    }
+    memoryUsers.set(username, hash)
+    return res.json({ success: true })
   }
   try {
     await pool.query("INSERT INTO users (username, password) VALUES ($1,$2)", [username, hash])
@@ -133,6 +152,11 @@ app.post("/api/login", async (req, res) => {
   const hash = crypto.createHash("sha256").update(password).digest("hex")
   if (!pool) {
     return res.status(503).json({ error: "Database not configured" })
+    const stored = memoryUsers.get(username)
+    if (stored && stored === hash) {
+      return res.json({ success: true })
+    }
+    return res.status(401).json({ error: "Invalid credentials" })
   }
   try {
     const { rows } = await pool.query("SELECT password FROM users WHERE username=$1", [username])
