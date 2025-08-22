@@ -65,7 +65,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
     allIframes.forEach((iframe) => iframe.classList.remove("active"))
     newTab.classList.add("active")
     newIframe.dataset.tabId = tabCounter
-    newIframe.classList.add("active")
     newIframe.addEventListener("load", () => {
       const title = newIframe.contentDocument.title
       if (title.length <= 1) {
@@ -112,6 +111,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
     }
 
     iframeContainer.appendChild(newIframe)
+    requestAnimationFrame(() => {
+      newIframe.classList.add("active")
+    })
     tabCounter += 1
   }
   function closeTab(event) {

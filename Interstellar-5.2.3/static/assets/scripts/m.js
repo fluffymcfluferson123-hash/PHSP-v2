@@ -93,31 +93,27 @@ if (nav) {
 
 // Themes
 var themeid = localStorage.getItem("theme")
-themeEle = document.createElement("link")
-themeEle.rel = "stylesheet"
-if (themeid == "catppuccinMocha") {
-  themeEle.href = "/assets/css/themes/catppuccin/mocha.css?v=1"
-  document.body.appendChild(themeEle)
-}
-if (themeid == "catppuccinMacchiato") {
-  themeEle.href = "/assets/css/themes/catppuccin/macchiato.css?v=1"
-  document.body.appendChild(themeEle)
-}
-if (themeid == "catppuccinFrappe") {
-  themeEle.href = "/assets/css/themes/catppuccin/frappe.css?v=1"
-  document.body.appendChild(themeEle)
-}
-if (themeid == "catppuccinLatte") {
-  themeEle.href = "/assets/css/themes/catppuccin/latte.css?v=1"
-  document.body.appendChild(themeEle)
-}
-if (themeid == "Inverted") {
-  themeEle.href = "/assets/css/themes/colors/inverted.css?v=2"
-  document.body.appendChild(themeEle)
-} else {
-  var customThemeEle = document.createElement("style")
-  customThemeEle.textContent = localStorage.getItem("theme-" + themeid)
-  document.head.appendChild(customThemeEle)
+if (themeid) {
+  var themeEle = document.createElement("link")
+  themeEle.rel = "stylesheet"
+  if (themeid == "catppuccinMocha") {
+    themeEle.href = "/assets/css/themes/catppuccin/mocha.css?v=1"
+  } else if (themeid == "catppuccinMacchiato") {
+    themeEle.href = "/assets/css/themes/catppuccin/macchiato.css?v=1"
+  } else if (themeid == "catppuccinFrappe") {
+    themeEle.href = "/assets/css/themes/catppuccin/frappe.css?v=1"
+  } else if (themeid == "catppuccinLatte") {
+    themeEle.href = "/assets/css/themes/catppuccin/latte.css?v=1"
+  } else if (themeid == "Inverted") {
+    themeEle.href = "/assets/css/themes/colors/inverted.css?v=2"
+  }
+  if (themeEle.href) {
+    document.head.appendChild(themeEle)
+  } else {
+    var customThemeEle = document.createElement("style")
+    customThemeEle.textContent = localStorage.getItem("theme-" + themeid)
+    document.head.appendChild(customThemeEle)
+  }
 }
 // Tab Cloaker
 document.addEventListener("DOMContentLoaded", function (event) {
