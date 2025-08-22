@@ -1,6 +1,6 @@
 let appInd
 let g = window.location.pathname === "/gm"
-let at = window.location.pathname === "/as" || window.location.pathname === "/ts"
+let at = window.location.pathname === "/as"
 let mode = "apps"
 let t = window.top.location.pathname === "/ta"
 
@@ -144,57 +144,13 @@ function Custom(app) {
       link: link,
       image: "/assets/media/icons/custom.webp",
       custom: false,
+      categories: ["all"],
+      status: "ok",
     }
 
     CustomApp(customApp)
-    initializeCustomApp(customApp)
+    loadList()
   }
-}
-
-function initializeCustomApp(customApp) {
-  const columnDiv = document.createElement("div")
-  columnDiv.classList.add("column")
-  columnDiv.setAttribute("data-category", "all")
-
-  const pinIcon = document.createElement("i")
-  pinIcon.classList.add("fa", "fa-map-pin")
-  pinIcon.ariaHidden = true
-
-  const btn = document.createElement("button")
-  btn.appendChild(pinIcon)
-  btn.style.float = "right"
-  btn.style.backgroundColor = "rgb(45,45,45)"
-  btn.style.borderRadius = "50%"
-  btn.style.borderColor = "transparent"
-  btn.style.color = "white"
-  btn.style.top = "-200px"
-  btn.style.position = "relative"
-  btn.onclick = function () {
-    setPin(appInd)
-  }
-  btn.title = "Pin"
-
-  const linkElem = document.createElement("a")
-  linkElem.onclick = function () {
-    handleClick(customApp)
-  }
-
-  const image = document.createElement("img")
-  image.width = 120
-  image.height = 120
-  image.src = customApp.image
-  image.loading = "lazy"
-
-  const paragraph = document.createElement("p")
-  paragraph.textContent = customApp.name
-
-  linkElem.appendChild(image)
-  linkElem.appendChild(paragraph)
-  columnDiv.appendChild(linkElem)
-  columnDiv.appendChild(btn)
-
-  const nonPinnedApps = document.querySelector(".container-apps")
-  nonPinnedApps.insertBefore(columnDiv, nonPinnedApps.firstChild)
 }
 
 function loadList() {
@@ -207,15 +163,6 @@ function loadList() {
   fetch(path)
     .then((response) => response.json())
     .then((appsList) => {
-      appsList.sort((a, b) => {
-        if (a.name.startsWith("[Custom]")) {
-          return -1
-        }
-        if (b.name.startsWith("[Custom]")) {
-          return 1
-        }
-        return a.name.localeCompare(b.name)
-      })
       const nonPinnedApps = document.querySelector(".container-apps")
       const pinnedApps = document.querySelector(".pinned-apps")
       nonPinnedApps.innerHTML = ""
@@ -240,12 +187,25 @@ function loadList() {
         storedApps = JSON.parse(localStorage.getItem("Acustom"))
       }
       if (storedApps) {
-        Object.values(storedApps).forEach((app) => {
-          initializeCustomApp(app)
-        })
+        appsList = Object.values(storedApps).concat(appsList)
       }
+      appsList.sort((a, b) => {
+        if (a.name.startsWith("[Custom]")) {
+          return -1
+        }
+        if (b.name.startsWith("[Custom]")) {
+          return 1
+        }
+        return a.name.localeCompare(b.name)
+      })
+
+      const statusOverrides = JSON.parse(localStorage.getItem("statusOverrides") || "{}")
+      const removedApps = JSON.parse(localStorage.getItem("removedApps") || "[]")
 
       appsList.forEach((app) => {
+        if (removedApps.includes(app.name)) {
+          return
+        }
         if (app.categories && app.categories.includes("local")) {
           app.local = true
         } else if (app.link && (app.link.includes("now.gg") || app.link.includes("nowgg.me"))) {
@@ -264,7 +224,8 @@ function loadList() {
 
         const columnDiv = document.createElement("div")
         columnDiv.classList.add("column")
-        columnDiv.setAttribute("data-category", app.categories.join(" "))
+        const cat = app.categories ? app.categories.join(" ") : "all"
+        columnDiv.setAttribute("data-category", cat)
 
         const pinIcon = document.createElement("i")
         pinIcon.classList.add("fa", "fa-map-pin")
@@ -290,8 +251,8 @@ function loadList() {
         }
 
         const image = document.createElement("img")
-        image.width = 120
-        image.height = 120
+        image.width = 140
+        image.height = 140
         image.loading = "lazy"
         if (app.image) {
           image.src = app.image
@@ -319,9 +280,34 @@ function loadList() {
           }
         }
 
+        let status = "ok"
+        if (app.error) {
+          status = "error"
+        } else if (app.load || app.partial) {
+          status = "warn"
+        }
+        if (app.status) {
+          status = app.status
+        }
+        if (statusOverrides[app.name]) {
+          status = statusOverrides[app.name]
+        }
+
+        const badge = document.createElement("span")
+        badge.classList.add("status-badge", status)
+        if (status === "error") {
+          badge.innerHTML = "<i class='fa-solid fa-xmark'></i>"
+        } else if (status === "warn") {
+          badge.innerHTML = "<i class='fa-solid fa-minus'></i>"
+        } else {
+          badge.innerHTML = "<i class='fa-solid fa-check'></i>"
+        }
+
         link.appendChild(image)
         link.appendChild(paragraph)
+        link.appendChild(badge)
         columnDiv.appendChild(link)
+
 
         if (appInd != 0) {
           columnDiv.appendChild(btn)
@@ -374,11 +360,7 @@ function updateCategories() {
         <option value="ai">AI</option>
         <option value="ad">AI Detectors</option>
         <option value="pc">Plagiarism Checker</option>
-        <option value="ts">YouTube Transcript</option>
-        <option value="cs">Cheats</option>
-        <option value="ep">Edpuzzle</option>
-        <option value="bl">Blooket</option>
-        <option value="kh">Kahoot</option>`
+        <option value="ts">YouTube Transcript</option>`
     document.getElementById("showTools").classList.add("active")
     document.getElementById("showApps").classList.remove("active")
   } else {
