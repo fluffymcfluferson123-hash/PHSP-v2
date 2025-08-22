@@ -1,11 +1,5 @@
 [
-  {
-    "name": "! Create Custom App",
-    "image": "/assets/media/icons/custom.webp",
-    "categories": ["all"],
-    "custom": "true"
-  },
-  {
+    {
     "name": "! [NEW] Request A Game",
     "link": "https://forms.gle/vwdHN3iPz5cLaHaMA",
     "image": "/assets/media/icons/request.webp",
@@ -350,7 +344,7 @@
     "image": "/assets/media/icons/nealfun.webp",
     "categories": ["all"],
     "error": "true",
-    "say": "Neal.fun does not work on Interstellar because of Cloudflare protection."
+    "say": "Neal.fun does not work on PHSP because of Cloudflare protection."
   },
   {
     "name": "YoHoHo.io",
