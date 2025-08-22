@@ -1,5 +1,5 @@
 .column {
-  width: 145px;
+  width: 120px;
   transition: all 0.2s ease;
   cursor: pointer;
   background: var(--background-column);
@@ -12,15 +12,16 @@
 
 .column img {
   position: absolute;
-  width: 145px;
-  height: 145px;
+  width: 120px;
+  height: 120px;
   border-radius: 0px;
   transition: all 0.2s ease;
   border-radius: 10px;
+  object-fit: cover;
 }
 
 .column p {
-  width: 145px;
+  width: 120px;
   height: 19px;
   font-style: normal;
   font-weight: 800;
@@ -29,12 +30,12 @@
   text-align: center;
   color: var(--text-primary);
   text-shadow: 0px 0px 30px rgba(0, 0, 0, 0.5);
-  padding-top: 136px;
+  padding-top: 111px;
   padding-bottom: 12px;
 }
 
 .column:hover {
-  transform: scale(1.2);
+  transform: scale(1.1);
 }
 
 .column:hover .label {
@@ -89,4 +90,26 @@ select {
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.5em;
+}
+
+.mode-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 0.5em;
+  margin-top: 100px;
+}
+
+.mode-toggle button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background: var(--background-buttons);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.mode-toggle button.active,
+.mode-toggle button:hover {
+  background: var(--background-accent);
 }

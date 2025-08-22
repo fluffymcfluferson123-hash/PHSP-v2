@@ -1,15 +1,13 @@
 <div align="center">
-    <img src="https://raw.githubusercontent.com/UseInterstellar/Interstellar/main/.github/branding/in.png">
+    <img src="static/assets/media/favicon/main.png" width="200">
     <p>Serving over 8+ million users since 2023.<p>
-    <p>Interstellar is a web proxy with a Clean and Sleek UI and easy to use menus. Our goal is to provide the best user experience to everyone.</p>
+    <p>PHSP is a web proxy with a Clean and Sleek UI and easy to use menus. Our goal is to provide the best user experience to everyone.</p>
 </div>
-
-![inpreview](https://github.com/InterstellarNetwork/Interstellar/assets/89202835/2669efed-5186-4932-83c4-725acae60bd2)
 
 > [!IMPORTANT]
 > If you fork this project, consider giving it a star in the original repository!
 
-**Join Our [Discord Community](https://discord.gg/interstellar) for support, more links, and an active community!**
+**Join Our [Discord Community](https://discord.gg/phsp) for support, more links, and an active community!**
 
 ## Features
 
@@ -41,8 +39,8 @@
 You must run these commands on your server:
 
 ```bash
-git clone https://github.com/InterstellarNetwork/Interstellar
-cd Interstellar
+git clone https://github.com/PHSPNetwork/PHSP
+cd PHSP
 npm install
 npm start
 ```
@@ -50,17 +48,17 @@ npm start
 ### Updating
 
 ```bash
-cd Interstellar
+cd PHSP
 git pull --force --allow-unrelated-histories # This may overwrite your local changes
 ```
 
-<a target="_blank" href="https://heroku.com/deploy/?template=https://github.com/interstellarnetwork/interstellar"><img alt="Deploy to Heroku" src="https://binbashbanana.github.io/deploy-buttons/buttons/remade/heroku.svg"></a>
-<a target="_blank" href="https://app.koyeb.com/deploy?type=git&repository=github.com/interstellarnetwork/interstellar"><img alt="Deploy to Koyeb" src="https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg"></a>
-<a target="_blank" href="https://app.cyclic.sh/api/app/deploy/interstellarnetwork/Interstellar"><img alt="Deploy to Cyclic" src="https://binbashbanana.github.io/deploy-buttons/buttons/remade/cyclic.svg"></a>
+<a target="_blank" href="https://heroku.com/deploy/?template=https://github.com/phspnetwork/phsp"><img alt="Deploy to Heroku" src="https://binbashbanana.github.io/deploy-buttons/buttons/remade/heroku.svg"></a>
+<a target="_blank" href="https://app.koyeb.com/deploy?type=git&repository=github.com/phspnetwork/phsp"><img alt="Deploy to Koyeb" src="https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg"></a>
+<a target="_blank" href="https://app.cyclic.sh/api/app/deploy/phspnetwork/PHSP"><img alt="Deploy to Cyclic" src="https://binbashbanana.github.io/deploy-buttons/buttons/remade/cyclic.svg"></a>
 
 ### Deployment Alternatives
 
-For more deployment options, join our [Discord Server](https://discord.gg/interstellar) for various ways to deploy Interstellar.
+For more deployment options, join our [Discord Server](https://discord.gg/phsp) for various ways to deploy PHSP.
 This includes methods of deploying to Render/OnRender.
 
 #### What happened to Replit Deployment?
@@ -89,17 +87,17 @@ As of January 1st, 2024, Replit is [no longer free](https://blog.replit.com/host
 4. Right-click Visibility and set Port Visibility to Public.
 
 > [!NOTE]
-> We are committed to making Interstellar easy and personalized however, as of now we need your support in making it ad-free. Consider keeping ads so Interstellar can run freely or contribute by being a supporter.
+> We are committed to making PHSP easy and personalized however, as of now we need your support in making it ad-free. Consider keeping ads so PHSP can run freely or contribute by being a supporter.
 
 ## Report Issues
 
 If you encounter problems, open an issue on GitHub, and we'll address it promptly.
 
 > [!TIP]
-> If you're having trouble, don't hesitate to reach out to us on [Discord](https://discord.gg/interstellar) for personalized support.
+> If you're having trouble, don't hesitate to reach out to us on [Discord](https://discord.gg/phsp) for personalized support.
 
 # Credits
 
-A huge thanks goes out to all of the people who have contributed to Interstellar.
+A huge thanks goes out to all of the people who have contributed to PHSP.
 
-[![Contributors](https://contrib.rocks/image?repo=InterstellarNetwork/Interstellar)](https://github.com/InterstellarNetwork/Interstellar/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=PHSPNetwork/PHSP)](https://github.com/PHSPNetwork/PHSP/graphs/contributors)

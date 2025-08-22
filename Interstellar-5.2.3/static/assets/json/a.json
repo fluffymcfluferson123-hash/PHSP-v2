@@ -1,17 +1,5 @@
 [
   {
-    "name": "! Create Custom App",
-    "image": "/assets/media/icons/custom.webp",
-    "categories": ["all"],
-    "custom": "true"
-  },
-  {
-    "name": "! [NEW] Request An App",
-    "link": "https://forms.gle/vwdHN3iPz5cLaHaMA",
-    "image": "/assets/media/icons/request.webp",
-    "categories": ["all"]
-  },
-  {
     "name": "Amazon",
     "link": "https://amazon.com/",
     "image": "/assets/media/icons/amazon.webp",
@@ -39,7 +27,7 @@
   },
   {
     "name": "Android",
-    "link": "https://now.gg/iframe/snippet?app_pkg=com.uncube.launcher3&partner=interstellar",
+    "link": "https://now.gg/iframe/snippet?app_pkg=com.uncube.launcher3&partner=phsp",
     "image": "/assets/media/icons/android.webp",
     "categories": ["all", "emu", "android"]
   },
@@ -51,13 +39,13 @@
   },
   {
     "name": "Character AI",
-    "link": "https://now.gg/iframe/snippet?app_pkg=ai.character.app&partner=interstellar",
+    "link": "https://now.gg/iframe/snippet?app_pkg=ai.character.app&partner=phsp",
     "image": "/assets/media/icons/characterai.webp",
     "categories": ["all", "emu", "android"]
   },
   {
     "name": "Aptoide",
-    "link": "https://now.gg/iframe/snippet?app_pkg=com.aptoide.partners.nowgg.store&partner=interstellar",
+    "link": "https://now.gg/iframe/snippet?app_pkg=com.aptoide.partners.nowgg.store&partner=phsp",
     "image": "/assets/media/icons/aptoide.webp",
     "categories": ["all", "emu", "android"]
   },

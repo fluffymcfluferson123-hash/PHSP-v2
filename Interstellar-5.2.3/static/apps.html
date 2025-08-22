@@ -19,6 +19,10 @@
   </head>
   <body>
     <div class="fixed-nav-bar"></div>
+    <div class="mode-toggle">
+      <button id="showApps" class="active">Apps</button>
+      <button id="showTools">Tools</button>
+    </div>
     <div class="input-container">
       <input type="text" id="searchbarbottom" onkeyup="search_bar()" placeholder="Search" />
       <select title="Category" id="category" name="category" onchange="show_category()">
@@ -36,10 +40,11 @@
         <option value="mail">Mail</option>
       </select>
     </div>
-    <div class="pinned-apps"></div>
-    <div class="container-apps"></div>
+    <div id="apps-container">
+      <div class="pinned-apps"></div>
+      <div class="container-apps"></div>
+    </div>
     <script src="assets/scripts/ap.js?v=116"></script>
-    <script src="/assets/scripts/m.js?v=82"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-WKJQ5QHQTJ"></script>
     <!-- DO NOT REMOVE-->
     <script>
