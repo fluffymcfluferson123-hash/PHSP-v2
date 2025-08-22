@@ -153,6 +153,54 @@ function Custom(app) {
   }
 }
 
+
+function initializeCustomApp(customApp) {
+  const columnDiv = document.createElement("div")
+  columnDiv.classList.add("column")
+  columnDiv.setAttribute("data-category", "all")
+
+  const pinIcon = document.createElement("i")
+  pinIcon.classList.add("fa", "fa-map-pin")
+  pinIcon.ariaHidden = true
+
+  const btn = document.createElement("button")
+  btn.appendChild(pinIcon)
+  btn.style.float = "right"
+  btn.style.backgroundColor = "rgb(45,45,45)"
+  btn.style.borderRadius = "50%"
+  btn.style.borderColor = "transparent"
+  btn.style.color = "white"
+  btn.style.top = "-200px"
+  btn.style.position = "relative"
+  btn.onclick = function () {
+    setPin(appInd)
+  }
+  btn.title = "Pin"
+
+  const linkElem = document.createElement("a")
+  linkElem.onclick = function () {
+    handleClick(customApp)
+  }
+
+  const image = document.createElement("img")
+  image.width = 140
+  image.height = 140
+  image.src = customApp.image
+  image.loading = "lazy"
+
+  const paragraph = document.createElement("p")
+  paragraph.textContent = customApp.name
+
+  linkElem.appendChild(image)
+  linkElem.appendChild(paragraph)
+  columnDiv.appendChild(linkElem)
+  columnDiv.appendChild(btn)
+
+  const nonPinnedApps = document.querySelector(".container-apps")
+  nonPinnedApps.insertBefore(columnDiv, nonPinnedApps.firstChild)
+}
+
+
 function loadList() {
   let path = "/assets/json/a.min.json"
   if (g) {
