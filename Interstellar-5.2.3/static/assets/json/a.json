@@ -1,4 +1,8 @@
 [
+transition:
+  transform 0.5s cubic-bezier(.22,.61,.36,1),
+  opacity 0.5s cubic-bezier(.22,.61,.36,1);
+
   {
     "name": "Amazon",
     "link": "https://amazon.com/",

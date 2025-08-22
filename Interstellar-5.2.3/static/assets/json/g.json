@@ -1,5 +1,13 @@
 [
   {
+    "name": "! [NEW] Request A Game",
+    "link": "https://forms.gle/vwdHN3iPz5cLaHaMA",
+    "image": "/assets/media/icons/request.webp",
+    "categories": ["all"]
+  }
+]
+
+  {
     "name": "Fancade",
     "link": "https://play.fancade.com",
     "image": "/assets/media/icon/fancade.jpg",

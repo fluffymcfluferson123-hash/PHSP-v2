@@ -59,6 +59,7 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
+body {
   opacity: 0;
   transition:
     background 0.5s ease,
@@ -68,6 +69,8 @@ body {
 
 body.loaded {
   opacity: 1;
+}
+
 }
 
 ::placeholder {
