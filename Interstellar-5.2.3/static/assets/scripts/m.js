@@ -84,6 +84,7 @@ if (nav) {
       <a class="navbar-link" href="/./gm"><i class="fa-solid fa-gamepad navbar-icon"></i><an>Ga</an><an>mes</an></a>
       <a class="navbar-link" href="/./as"><i class="fa-solid fa-phone navbar-icon"></i><an>Ap</an><an>ps</an></a>
       <a class="navbar-link" href="/./ts"><i class="fa-solid fa-folder navbar-icon"></i><an>To</an><an>ols</an></a>
+      <a class="navbar-link" href="/./ah"><i class="fa-solid fa-circle-info navbar-icon"></i><an>About</an><an>/Help</an></a>
       ${!(window.top !== window || window.location.pathname === "/ta") ? '<a class="navbar-link" href="/./ta"><i class="fa-solid fa-laptop navbar-icon"></i><an>Ta</an><an>bs</an></a>' : ""}
       <a class="navbar-link" href="/./st"><i class="fa-solid fa-gear navbar-icon settings-icon"></i><an>Set</an><an>tings</an></a>
     </div>`
@@ -92,31 +93,27 @@ if (nav) {
 
 // Themes
 var themeid = localStorage.getItem("theme")
-themeEle = document.createElement("link")
-themeEle.rel = "stylesheet"
-if (themeid == "catppuccinMocha") {
-  themeEle.href = "/assets/css/themes/catppuccin/mocha.css?v=1"
-  document.body.appendChild(themeEle)
-}
-if (themeid == "catppuccinMacchiato") {
-  themeEle.href = "/assets/css/themes/catppuccin/macchiato.css?v=1"
-  document.body.appendChild(themeEle)
-}
-if (themeid == "catppuccinFrappe") {
-  themeEle.href = "/assets/css/themes/catppuccin/frappe.css?v=1"
-  document.body.appendChild(themeEle)
-}
-if (themeid == "catppuccinLatte") {
-  themeEle.href = "/assets/css/themes/catppuccin/latte.css?v=1"
-  document.body.appendChild(themeEle)
-}
-if (themeid == "Inverted") {
-  themeEle.href = "/assets/css/themes/colors/inverted.css?v=2"
-  document.body.appendChild(themeEle)
-} else {
-  var customThemeEle = document.createElement("style")
-  customThemeEle.textContent = localStorage.getItem("theme-" + themeid)
-  document.head.appendChild(customThemeEle)
+if (themeid) {
+  var themeEle = document.createElement("link")
+  themeEle.rel = "stylesheet"
+  if (themeid == "catppuccinMocha") {
+    themeEle.href = "/assets/css/themes/catppuccin/mocha.css?v=1"
+  } else if (themeid == "catppuccinMacchiato") {
+    themeEle.href = "/assets/css/themes/catppuccin/macchiato.css?v=1"
+  } else if (themeid == "catppuccinFrappe") {
+    themeEle.href = "/assets/css/themes/catppuccin/frappe.css?v=1"
+  } else if (themeid == "catppuccinLatte") {
+    themeEle.href = "/assets/css/themes/catppuccin/latte.css?v=1"
+  } else if (themeid == "Inverted") {
+    themeEle.href = "/assets/css/themes/colors/inverted.css?v=2"
+  }
+  if (themeEle.href) {
+    document.head.appendChild(themeEle)
+  } else {
+    var customThemeEle = document.createElement("style")
+    customThemeEle.textContent = localStorage.getItem("theme-" + themeid)
+    document.head.appendChild(customThemeEle)
+  }
 }
 // Tab Cloaker
 document.addEventListener("DOMContentLoaded", function (event) {
