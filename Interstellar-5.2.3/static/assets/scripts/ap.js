@@ -1,6 +1,6 @@
 let appInd
 let g = window.location.pathname === "/gm"
-let at = window.location.pathname === "/as" || window.location.pathname === "/ts"
+let at = window.location.pathname === "/as"
 let mode = "apps"
 let t = window.top.location.pathname === "/ta"
 
@@ -180,8 +180,8 @@ function initializeCustomApp(customApp) {
   }
 
   const image = document.createElement("img")
-  image.width = 120
-  image.height = 120
+  image.width = 140
+  image.height = 140
   image.src = customApp.image
   image.loading = "lazy"
 
@@ -290,8 +290,8 @@ function loadList() {
         }
 
         const image = document.createElement("img")
-        image.width = 120
-        image.height = 120
+        image.width = 140
+        image.height = 140
         image.loading = "lazy"
         if (app.image) {
           image.src = app.image
@@ -374,11 +374,7 @@ function updateCategories() {
         <option value="ai">AI</option>
         <option value="ad">AI Detectors</option>
         <option value="pc">Plagiarism Checker</option>
-        <option value="ts">YouTube Transcript</option>
-        <option value="cs">Cheats</option>
-        <option value="ep">Edpuzzle</option>
-        <option value="bl">Blooket</option>
-        <option value="kh">Kahoot</option>`
+        <option value="ts">YouTube Transcript</option>`
     document.getElementById("showTools").classList.add("active")
     document.getElementById("showApps").classList.remove("active")
   } else {

@@ -87,7 +87,6 @@ app.use("/ov", cors({ origin: true }))
 
 const routes = [
   { path: "/as", file: "apps.html" },
-  { path: "/ts", file: "tools.html" },
   { path: "/gm", file: "games.html" },
   { path: "/st", file: "settings.html" },
   { path: "/ta", file: "tabs.html" },
