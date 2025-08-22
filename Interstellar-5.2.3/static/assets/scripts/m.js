@@ -84,11 +84,26 @@ if (nav) {
       <a class="navbar-link" href="/./gm"><i class="fa-solid fa-gamepad navbar-icon"></i><an>Ga</an><an>mes</an></a>
       <a class="navbar-link" href="/./as"><i class="fa-solid fa-folder navbar-icon"></i><an>Apps</an><an>/Tools</an></a>
 
+
       <a class="navbar-link" href="/./ah"><i class="fa-solid fa-circle-info navbar-icon"></i><an>About</an><an>/Help</an></a>
       ${!(window.top !== window || window.location.pathname === "/ta") ? '<a class="navbar-link" href="/./ta"><i class="fa-solid fa-laptop navbar-icon"></i><an>Ta</an><an>bs</an></a>' : ""}
       <a class="navbar-link" href="/./st"><i class="fa-solid fa-gear navbar-icon settings-icon"></i><an>Set</an><an>tings</an></a>
+      <a class="navbar-link" href="/./li"><i class="fa-solid fa-user navbar-icon"></i><an>Sign</an><an>up/Login</an></a>
     </div>`
   nav.innerHTML = html
+
+  const registered = localStorage.getItem("registered") === "true"
+  if (!registered) {
+    const appsLink = nav.querySelector('a[href="/./as"]')
+    const settingsLink = nav.querySelector('a[href="/./st"]')
+    ;[appsLink, settingsLink].forEach((link) => {
+      if (link) {
+        link.href = "/./li"
+        link.innerHTML += ' <i class="fa-solid fa-lock"></i>'
+        link.title = "Register to unlock"
+      }
+    })
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {

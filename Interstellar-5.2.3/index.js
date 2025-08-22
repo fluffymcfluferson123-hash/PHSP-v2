@@ -91,6 +91,7 @@ const routes = [
   { path: "/st", file: "settings.html" },
   { path: "/ta", file: "tabs.html" },
   { path: "/ah", file: "about.html" },
+  { path: "/li", file: "login.html" },
   { path: "/", file: "index.html" },
   { path: "/tos", file: "tos.html" },
 ];

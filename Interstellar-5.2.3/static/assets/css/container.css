@@ -113,3 +113,23 @@ select {
 .mode-toggle button:hover {
   background: var(--background-accent);
 }
+
+.status-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 18px;
+}
+
+.status-badge.ok {
+  color: #00c853;
+}
+
+.status-badge.warn {
+  color: #ffd600;
+}
+
+.status-badge.error {
+  color: #d50000;
+}
+

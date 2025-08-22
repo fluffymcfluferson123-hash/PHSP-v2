@@ -144,12 +144,15 @@ function Custom(app) {
       link: link,
       image: "/assets/media/icons/custom.webp",
       custom: false,
+      categories: ["all"],
+      status: "ok",
     }
 
     CustomApp(customApp)
-    initializeCustomApp(customApp)
+    loadList()
   }
 }
+
 
 function initializeCustomApp(customApp) {
   const columnDiv = document.createElement("div")
@@ -197,6 +200,7 @@ function initializeCustomApp(customApp) {
   nonPinnedApps.insertBefore(columnDiv, nonPinnedApps.firstChild)
 }
 
+
 function loadList() {
   let path = "/assets/json/a.min.json"
   if (g) {
@@ -207,15 +211,6 @@ function loadList() {
   fetch(path)
     .then((response) => response.json())
     .then((appsList) => {
-      appsList.sort((a, b) => {
-        if (a.name.startsWith("[Custom]")) {
-          return -1
-        }
-        if (b.name.startsWith("[Custom]")) {
-          return 1
-        }
-        return a.name.localeCompare(b.name)
-      })
       const nonPinnedApps = document.querySelector(".container-apps")
       const pinnedApps = document.querySelector(".pinned-apps")
       nonPinnedApps.innerHTML = ""
@@ -240,12 +235,25 @@ function loadList() {
         storedApps = JSON.parse(localStorage.getItem("Acustom"))
       }
       if (storedApps) {
-        Object.values(storedApps).forEach((app) => {
-          initializeCustomApp(app)
-        })
+        appsList = Object.values(storedApps).concat(appsList)
       }
+      appsList.sort((a, b) => {
+        if (a.name.startsWith("[Custom]")) {
+          return -1
+        }
+        if (b.name.startsWith("[Custom]")) {
+          return 1
+        }
+        return a.name.localeCompare(b.name)
+      })
+
+      const statusOverrides = JSON.parse(localStorage.getItem("statusOverrides") || "{}")
+      const removedApps = JSON.parse(localStorage.getItem("removedApps") || "[]")
 
       appsList.forEach((app) => {
+        if (removedApps.includes(app.name)) {
+          return
+        }
         if (app.categories && app.categories.includes("local")) {
           app.local = true
         } else if (app.link && (app.link.includes("now.gg") || app.link.includes("nowgg.me"))) {
@@ -264,7 +272,8 @@ function loadList() {
 
         const columnDiv = document.createElement("div")
         columnDiv.classList.add("column")
-        columnDiv.setAttribute("data-category", app.categories.join(" "))
+        const cat = app.categories ? app.categories.join(" ") : "all"
+        columnDiv.setAttribute("data-category", cat)
 
         const pinIcon = document.createElement("i")
         pinIcon.classList.add("fa", "fa-map-pin")
@@ -319,9 +328,34 @@ function loadList() {
           }
         }
 
+        let status = "ok"
+        if (app.error) {
+          status = "error"
+        } else if (app.load || app.partial) {
+          status = "warn"
+        }
+        if (app.status) {
+          status = app.status
+        }
+        if (statusOverrides[app.name]) {
+          status = statusOverrides[app.name]
+        }
+
+        const badge = document.createElement("span")
+        badge.classList.add("status-badge", status)
+        if (status === "error") {
+          badge.innerHTML = "<i class='fa-solid fa-xmark'></i>"
+        } else if (status === "warn") {
+          badge.innerHTML = "<i class='fa-solid fa-minus'></i>"
+        } else {
+          badge.innerHTML = "<i class='fa-solid fa-check'></i>"
+        }
+
         link.appendChild(image)
         link.appendChild(paragraph)
+        link.appendChild(badge)
         columnDiv.appendChild(link)
+
 
         if (appInd != 0) {
           columnDiv.appendChild(btn)
