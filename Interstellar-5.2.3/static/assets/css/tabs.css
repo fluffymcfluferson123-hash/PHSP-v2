@@ -184,17 +184,27 @@ p {
 .iframe-container iframe {
   opacity: 0;
   pointer-events: none;
-  transform: translateX(100%);
+  transform: translate3d(100%, 0, 0);
   transition:
     transform 0.5s ease,
     opacity 0.5s ease;
+  will-change: transform, opacity;
 }
 
 .iframe-container iframe.active {
   opacity: 1;
   pointer-events: auto;
-  transform: translateX(0);
+  transform: translate3d(0, 0, 0);
 }
+
+/* Optional: accessibility-friendly fallback */
+@media (prefers-reduced-motion: reduce) {
+  .iframe-container iframe {
+    transition: none;
+    transform: none;
+  }
+}
+
 
 #add-tab {
   padding: 0.5rem;
